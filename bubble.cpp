@@ -2,9 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
+#include <fstream>
 
 using namespace std;
-using namespace std::chrono;
+using namespace chrono;
 
 const int n_array = 10000;
 
@@ -60,7 +61,6 @@ public:
 bool cmp(int a, int b) {
     return a > b;
 }
-
 bool cmp2(int a, int b) {
     return a < b;
 }
@@ -135,49 +135,58 @@ int main() {
     srand(time(0));
     int* b = new int[n_array];
     int* a = b + n_array - 1;
-
     Burbuja burb;
 
-    // BURBUJA DIRECTA
+    ofstream archivo("tiempos.csv");
+    archivo << "Metodo,Tiempo (nanosegundos)\n";
+
+    // 1. Burbuja directa
     generador(n_array, b);
     cout << "Ordenando con metodo burbuja_directa:" << endl;
     auto start1 = high_resolution_clock::now();
     burb.burbuja_directa(b, a);
     auto end1 = high_resolution_clock::now();
     burb.imprimir(b, a);
-    cout << "Tiempo: " << duration_cast<milliseconds>(end1 - start1).count() << " ms\n\n";
+    auto tiempo1 = duration_cast<nanoseconds>(end1 - start1).count();
+    cout << "Tiempo: " << tiempo1 << " ns\n\n";
+    archivo << "Burbuja Directa," << tiempo1 << "\n";
 
-    // POLIMORFISMO (mayor a menor)
+    // 2. Polimorfismo mayor a menor
     generador(n_array, b);
-    Policambio2 my;
     cout << "Ordenando con metodo polimorfismo (mayor a menor):" << endl;
+    Policambio2 my;
     auto start2 = high_resolution_clock::now();
     burb.polimorfismo(b, a, &my);
     auto end2 = high_resolution_clock::now();
     burb.imprimir(b, a);
-    cout << "Tiempo: " << duration_cast<milliseconds>(end2 - start2).count() << " ms\n\n";
+    auto tiempo2 = duration_cast<nanoseconds>(end2 - start2).count();
+    cout << "Tiempo: " << tiempo2 << " ns\n\n";
+    archivo << "Polimorfismo Mayor a Menor," << tiempo2 << "\n";
 
-    // POLIMORFISMO (menor a mayor)
+    // 3. Polimorfismo menor a mayor
     generador(n_array, b);
-    Policambio my2;
     cout << "Ordenando con metodo polimorfismo (menor a mayor):" << endl;
+    Policambio my2;
     auto start3 = high_resolution_clock::now();
     burb.polimorfismo(b, a, &my2);
     auto end3 = high_resolution_clock::now();
     burb.imprimir(b, a);
-    cout << "Tiempo: " << duration_cast<milliseconds>(end3 - start3).count() << " ms\n\n";
+    auto tiempo3 = duration_cast<nanoseconds>(end3 - start3).count();
+    cout << "Tiempo: " << tiempo3 << " ns\n\n";
+    archivo << "Polimorfismo Menor a Mayor," << tiempo3 << "\n";
 
-    // PUNTERO A FUNCION
+    // 4. Puntero a función
     generador(n_array, b);
     cout << "Ordenando con metodo de puntero a funcion:" << endl;
-    bool(*d)(int, int) = &cmp2;
     auto start4 = high_resolution_clock::now();
-    burb.puntero_funcion(b, a, d);
+    burb.puntero_funcion(b, a, cmp2);
     auto end4 = high_resolution_clock::now();
     burb.imprimir(b, a);
-    cout << "Tiempo: " << duration_cast<milliseconds>(end4 - start4).count() << " ms\n\n";
+    auto tiempo4 = duration_cast<nanoseconds>(end4 - start4).count();
+    cout << "Tiempo: " << tiempo4 << " ns\n\n";
+    archivo << "Puntero a Funcion," << tiempo4 << "\n";
 
-    // FUNCTOR
+    // 5. Functor
     generador(n_array, b);
     cout << "Ordenando con functores:" << endl;
     ascen<int> as;
@@ -186,7 +195,12 @@ int main() {
     burbuja_ascendente.burbujitancia(b, a);
     auto end5 = high_resolution_clock::now();
     burb.imprimir(b, a);
-    cout << "Tiempo: " << duration_cast<milliseconds>(end5 - start5).count() << " ms\n\n";
+    auto tiempo5 = duration_cast<nanoseconds>(end5 - start5).count();
+    cout << "Tiempo: " << tiempo5 << " ns\n\n";
+    archivo << "Functor," << tiempo5 << "\n";
+
+    archivo.close();
+    cout << "Archivo 'tiempos.csv' generado con éxito.\n";
 
     delete[] b;
     return 0;
