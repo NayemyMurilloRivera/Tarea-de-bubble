@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <chrono>  // Para medir tiempo
+#include <chrono>
+
 using namespace std;
 using namespace std::chrono;
 
