@@ -175,9 +175,6 @@ int main() {
     cout << "Tiempo: " << tiempo5 << " ns\n\n";
     archivo << "Functor," << tiempo5 << "\n";
 
-    archivo.close();
-    cout << "Archivo 'tiempos.csv' generado con éxito.\n";
-
     delete[] b;
     return 0;
 }
