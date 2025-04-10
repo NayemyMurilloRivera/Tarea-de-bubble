@@ -136,45 +136,45 @@ int main() {
     int* b = new int[n_array];
     int* a = b + n_array - 1;
     Burbuja burb;
-
     // 1. Burbuja directa
     generador(n_array, b);
     cout << "Ordenando con metodo burbuja_directa:" << endl;
+    auto start1 = high_resolution_clock::now();
     burb.burbuja_directa(b, a);
     auto end1 = high_resolution_clock::now();
-    auto tiempo1 = duration_cast<nanoseconds>(end1).count();
+    auto tiempo1 = duration_cast<nanoseconds>(end1 - start1).count();
     cout << "Tiempo: " << tiempo1 << " ns\n\n";
-
-    // 2. Polimorfismo mayor a menor
+    
+    // 3. Polimorfismo menor a mayor
     generador(n_array, b);
-    cout << "Ordenando con metodo polimorfismo (mayor a menor):" << endl;
-    Policambio2 my;
-    burb.polimorfismo(b, a, &my);
-    auto end2 = high_resolution_clock::now();
-    auto tiempo1 = duration_cast<nanoseconds>(end2).count();
-    cout << "Tiempo: " << tiempo2 << " ns\n\n";
-    archivo << "Polimorfismo Mayor a Menor," << tiempo2 << "\n";
-
+    cout << "Ordenando con metodo polimorfismo (menor a mayor):" << endl;
+    Policambio my2;
+    auto start3 = high_resolution_clock::now();
+    burb.polimorfismo(b, a, &my2);
+    auto end3 = high_resolution_clock::now();
+    auto tiempo3 = duration_cast<nanoseconds>(end3 - start3).count();
+    cout << "Tiempo: " << tiempo3 << " ns\n\n";
+    
     // 4. Puntero a función
     generador(n_array, b);
     cout << "Ordenando con metodo de puntero a funcion:" << endl;
+    auto start4 = high_resolution_clock::now();
     burb.puntero_funcion(b, a, cmp2);
     auto end4 = high_resolution_clock::now();
-    auto tiempo4 = duration_cast<nanoseconds>(end4).count();
+    auto tiempo4 = duration_cast<nanoseconds>(end4 - start4).count();
     cout << "Tiempo: " << tiempo4 << " ns\n\n";
-    archivo << "Puntero a Funcion," << tiempo4 << "\n";
+  
 
     // 5. Functor
     generador(n_array, b);
     cout << "Ordenando con functores:" << endl;
     ascen<int> as;
     Burbuja_functor<ascen<int>> burbuja_ascendente(as);
+    auto start5 = high_resolution_clock::now();
     burbuja_ascendente.burbujitancia(b, a);
     auto end5 = high_resolution_clock::now();
-    auto tiempo5 = duration_cast<nanoseconds>(end5).count();
+    auto tiempo5 = duration_cast<nanoseconds>(end5 - start5).count();
     cout << "Tiempo: " << tiempo5 << " ns\n\n";
-    archivo << "Functor," << tiempo5 << "\n";
-
     delete[] b;
     return 0;
 }
